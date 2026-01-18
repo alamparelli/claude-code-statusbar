@@ -40,7 +40,7 @@ The statusbar displays:
 ### Quick Install
 
 ```bash
-git clone https://github.com/davidamo9/claude-code-statusbar.git
+git clone https://github.com/alamparelli/claude-code-statusbar.git
 cd claude-code-statusbar
 ./install.sh
 ```
