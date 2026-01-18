@@ -74,9 +74,17 @@ if [ -n "$context_size" ] && [ "$context_size" != "0" ] && [ "$context_size" != 
     # Total tokens used in context
     total_tokens=$((input_tokens + output_tokens))
 
-    # Calculate percentage rounded UP (ceiling)
-    pct=$(awk "BEGIN {x=($total_tokens / $context_size) * 100; print int(x) + (x > int(x) ? 1 : 0)}")
-    pct_int=$pct
+    # Autocompact buffer: ~22.5% of context window (~45K for 200K window)
+    # This is reserved space for autocompact, not exposed in API yet
+    autocompact_buffer=$((context_size * 225 / 1000))
+
+    # Effective available space (context - buffer)
+    effective_size=$((context_size - autocompact_buffer))
+
+    # Calculate percentage WITH buffer (real usage relative to full context)
+    pct_with_buffer=$(awk "BEGIN {x=(($total_tokens + $autocompact_buffer) / $context_size) * 100; print int(x) + (x > int(x) ? 1 : 0)}")
+    # Cap at 100%
+    [ "$pct_with_buffer" -gt 100 ] && pct_with_buffer=100
 
     # Format token count (K for thousands)
     if [ "$total_tokens" -ge 1000 ]; then
@@ -85,21 +93,21 @@ if [ -n "$context_size" ] && [ "$context_size" != "0" ] && [ "$context_size" != 
         tokens_display="$total_tokens"
     fi
 
-    # Context size in K
-    ctx_size_k="$((context_size / 1000))K"
+    # Effective size in K
+    effective_size_k="$((effective_size / 1000))K"
 
-    # Color coding based on usage (ANSI colors) - applied to percentage
-    if [ "$pct_int" -ge 80 ]; then
+    # Color coding based on usage WITH buffer (ANSI colors)
+    if [ "$pct_with_buffer" -ge 80 ]; then
         color="\033[31m"  # Red - danger zone
-    elif [ "$pct_int" -ge 50 ]; then
+    elif [ "$pct_with_buffer" -ge 50 ]; then
         color="\033[33m"  # Yellow - getting full
     else
         color="\033[32m"  # Green - plenty of room
     fi
     reset="\033[0m"
 
-    # Format: colored percentage + tokens
-    usage_info="${color}${pct}%${reset} (${tokens_display}/${ctx_size_k})"
+    # Format: percentage with buffer included (tokens/effective_size)
+    usage_info="${color}${pct_with_buffer}%${reset} (${tokens_display}/${effective_size_k})"
 fi
 
 # Get current working directory (shortened)
