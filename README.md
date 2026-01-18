@@ -2,7 +2,8 @@
 
 > **Full credit to [davidamo9](https://github.com/davidamo9)** - Based on the [original gist](https://gist.github.com/davidamo9/764415aff29959de21f044dbbfd00cd9)
 
-![Screenshot](screenshot.png)
+<img width="1070" height="422" alt="CleanShot 2026-01-18 at 18 43 54@2x" src="https://github.com/user-attachments/assets/c1a658fc-08c1-4089-920b-374c9a2b174f" />
+
 
 A customizable statusbar hook for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that displays useful information right in your terminal.
 
