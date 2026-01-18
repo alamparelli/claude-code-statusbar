@@ -1,5 +1,7 @@
 # Claude Code Statusbar
 
+> **Full credit to [davidamo9](https://github.com/davidamo9)** - Based on the [original gist](https://gist.github.com/davidamo9/764415aff29959de21f044dbbfd00cd9)
+
 A customizable statusbar hook for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that displays useful information right in your terminal.
 
 ![statusbar-preview](https://img.shields.io/badge/claude--code-statusbar-blue)
